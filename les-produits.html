@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvestirFuté — Les produits financiers</title>
+  <!--
+    ÉTAPE 3 — BALISE <link> : charge la feuille de style externe.
+    Même fichier style.css que les autres pages = cohérence visuelle garantie !
+  -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ================================================
+       Styles SPÉCIFIQUES à les-produits.html
+       Tout le reste vient de style.css
+    ================================================ */
+
+    /* Carte article produit (grid 3 colonnes) */
+    .produits-liste { display: flex; flex-direction: column; gap: 24px; margin-bottom: 60px; }
+
+    article.produit {
+      background: rgba(27,58,107,0.25);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 10px; padding: 30px 34px;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      align-items: start; gap: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    article.produit:hover { border-color: rgba(201,168,76,0.4); transform: translateX(4px); }
+
+    .produit-emoji { font-size: 2.8rem; text-align: center; padding-top: 4px; }
+    .produit-corps h3 { font-size: 1.25rem; margin-bottom: 6px; }
+    .produit-corps p  { margin: 0 0 12px; font-size: 0.97rem; }
+    .produit-corps ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+    .produit-corps ul li {
+      background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+      color: var(--or); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.5px; padding: 3px 12px; border-radius: 50px;
+    }
+    .produit-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 120px; }
+
+    /* Badge niveau */
+    .badge-niveau {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 4px 14px; border-radius: 50px;
+    }
+    .badge-niveau.debutant      { background: rgba(46,204,113,0.15); color: var(--vert); }
+    .badge-niveau.intermediaire { background: rgba(201,168,76,0.15); color: var(--or); }
+    .badge-niveau.avance        { background: rgba(231,76,60,0.15); color: var(--rouge); }
+
+    /* Rendement */
+    .rendement { font-family: var(--font-titre); font-size: 1.4rem; color: var(--vert); text-align: right; }
+    .rendement small { font-family: var(--font-corps); font-size: 0.7rem; color: var(--gris); display: block; }
+
+    /* Enveloppes fiscales */
+    .enveloppes-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px; margin-top: 30px; margin-bottom: 60px;
+    }
+    .enveloppe-card {
+      background: rgba(27,58,107,0.2); border: 1px solid rgba(201,168,76,0.12);
+      border-top: 3px solid var(--or); border-radius: 8px; padding: 26px 22px; transition: transform 0.2s;
+    }
+    .enveloppe-card:hover { transform: translateY(-3px); }
+    .enveloppe-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+    .enveloppe-card p  { font-size: 0.93rem; margin: 0; }
+
+    /* Responsive mobile spécifique */
+    @media (max-width: 768px) {
+      article.produit { grid-template-columns: 1fr; }
+      .produit-meta { align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo">Investir<span>Futé</span></a>
+
+    <!-- BALISE <nav> : navigation principale -->
+    <nav>
+      <!-- BALISE <ul> : liste de liens -->
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="les-bases.html">Les bases</a></li>
+        <!-- BALISE <li> avec class="actif" pour la page courante -->
+        <li><a href="les-produits.html" class="actif">Les produits</a></li>
+        <li><a href="strategies.html">Stratégies</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="simulateur.html">Simulateur</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- BANNIÈRE -->
+  <!-- BALISE <section> : bloc thématique -->
+  <section class="page-banner">
+    <p class="breadcrumb">
+      <!-- BALISE <a> : lien de navigation -->
+      <a href="index.html">Accueil</a> ›
+      <a href="les-bases.html">Les bases</a> › Les produits
+    </p>
+    <h1>Les produits <em>financiers</em></h1>
+    <p>Actions, ETF, obligations, immobilier... Découvre les principaux
+       véhicules d'investissement, leurs rendements et leurs risques.</p>
+  </section>
+
+  <!-- MAIN : contenu principal -->
+  <main>
+
+    <!-- ---- Section 1 : Les produits ---- -->
+    <!-- BALISE <section> : regroupe tous les produits financiers -->
+    <section>
+      <span class="section-label">Chapitre 1</span>
+      <h2>Les principaux produits d'investissement</h2>
+
+      <!-- BALISE <div> : conteneur de la liste d'articles -->
+      <div class="produits-liste">
+
+        <!-- ============================
+             BALISE <article> : contenu autonome
+             Ici, chaque produit financier = un article
+        ============================ -->
+
+        <!-- Article 1 : ETF -->
+        <article class="produit">
+          <div class="produit-emoji">📊</div>
+
+          <!-- BALISE <div> : corps de texte de l'article -->
+          <div class="produit-corps">
+            <h3>ETF (Fonds indiciels)</h3>
+            <p>
+              Un ETF suit automatiquement un indice boursier (ex : le CAC 40 ou le S&P 500).
+              Au lieu d'acheter une seule action, tu achètes un <strong>panier de centaines d'actions</strong>
+              en une seule transaction. C'est la meilleure option pour débuter.
+            </p>
+            <!-- BALISE <ul> : liste de caractéristiques -->
+            <ul>
+              <li>Diversification automatique</li>  <!-- BALISE <li> -->
+              <li>Frais très faibles (~0,2%/an)</li>
+              <li>Accessible dès 10€</li>
+              <li>Idéal long terme</li>
+            </ul>
+          </div>
+
+          <div class="produit-meta">
+            <span class="badge-niveau debutant">Débutant</span>
+            <div class="rendement">7–10%<small>rendement /an (historique)</small></div>
+          </div>
+        </article>
+
+        <!-- Article 2 : Actions -->
+        <article class="produit">
+          <div class="produit-emoji">📈</div>
+          <div class="produit-corps">
+            <h3>Actions en bourse</h3>
+            <p>
+              Acheter une action, c'est devenir <strong>propriétaire d'une petite part</strong>
+              d'une entreprise (Apple, LVMH, Tesla...). Si l'entreprise prospère, ton action prend de la valeur.
+              Plus risqué que les ETF mais potentiellement plus rentable.
+            </p>
+            <ul>
+              <li>Potentiel de gain élevé</li>
+              <li>Dividendes possibles</li>
+              <li>Nécessite de la recherche</li>
+              <li>Risque de perte totale</li>
+            </ul>
+          </div>
+          <div class="produit-meta">
+            <span class="badge-niveau intermediaire">Intermédiaire</span>
+            <div class="rendement">Variable<small>dépend de l'entreprise</small></div>
+          </div>
+        </article>
+
+        <!-- Article 3 : Obligations -->
+        <article class="produit">
+          <div class="produit-emoji">🏛️</div>
+          <div class="produit-corps">
+            <h3>Obligations</h3>
+            <p>
+              Tu <strong>prêtes de l'argent</strong> à un État ou une entreprise,
+              qui te rembourse avec des intérêts fixes. Moins rentable que les actions,
+              mais beaucoup plus stable. Utile pour équilibrer un portefeuille.
+            </p>
+            <ul>
+              <li>Revenus fixes réguliers</li>
+              <li>Moins volatil que les actions</li>
+              <li>Capital souvent garanti</li>
+              <li>Rendement limité</li>
+            </ul>
+          </div>
+          <div class="produit-meta">
+            <span class="badge-niveau debutant">Débutant</span>
+            <div class="rendement">2–5%<small>rendement /an</small></div>
+          </div>
+        </article>
+
+        <!-- Article 4 : Immobilier -->
+        <article class="produit">
+          <div class="produit-emoji">🏠</div>
+          <div class="produit-corps">
+            <h3>Immobilier (SCPI)</h3>
+            <p>
+              Les SCPI permettent d'investir dans l'immobilier <strong>sans acheter un appartement entier</strong>.
+              Tu achètes des parts d'un parc immobilier géré par des pros et tu touches
+              des loyers proportionnels à ta mise.
+            </p>
+            <ul>
+              <li>Revenus passifs (loyers)</li>
+              <li>Accessible dès 200€</li>
+              <li>Peu liquide (difficile à revendre vite)</li>
+              <li>Frais d'entrée élevés</li>
+            </ul>
+          </div>
+          <div class="produit-meta">
+            <span class="badge-niveau intermediaire">Intermédiaire</span>
+            <div class="rendement">4–6%<small>rendement /an</small></div>
+          </div>
+        </article>
+
+        <!-- Article 5 : Crypto -->
+        <article class="produit">
+          <div class="produit-emoji">₿</div>
+          <div class="produit-corps">
+            <h3>Cryptomonnaies</h3>
+            <p>
+              Bitcoin, Ethereum... Les cryptos sont des actifs <strong>très volatils</strong>.
+              Elles peuvent doubler ou perdre 80% de leur valeur en quelques mois.
+              À réserver à une toute petite partie du portefeuille, si tu comprends bien les risques.
+            </p>
+            <ul>
+              <li>Potentiel de gain énorme</li>
+              <li>Risque de perte totale</li>
+              <li>Marché très spéculatif</li>
+              <li>Régulation incertaine</li>
+            </ul>
+          </div>
+          <div class="produit-meta">
+            <span class="badge-niveau avance">Avancé</span>
+            <div class="rendement" style="color:var(--rouge)">Très variable<small>risque maximal</small></div>
+          </div>
+        </article>
+
+      </div>
+      <!-- ☝️ Fin du div.produits-liste -->
+    </section>
+
+    <!-- ---- Section 2 : Enveloppes fiscales ---- -->
+    <section>
+      <span class="section-label">Chapitre 2</span>
+      <h2>Où mettre ton argent ? Les enveloppes fiscales</h2>
+      <p>
+        En France, certains "comptes" ont des avantages fiscaux importants.
+        Choisir la bonne enveloppe, c'est payer <strong>moins d'impôts</strong> sur tes gains.
+      </p>
+
+      <!-- BALISE <div> : conteneur de la grille de cartes -->
+      <div class="enveloppes-grid">
+
+        <!-- Carte 1 : PEA -->
+        <div class="enveloppe-card">
+          <h3>🇫🇷 PEA</h3>
+          <!-- BALISE <p> : paragraphe descriptif -->
+          <p>
+            Plan d'Épargne en Actions. Idéal pour investir en bourse.
+            Après 5 ans, <strong>tes gains sont exonérés d'impôts</strong>
+            (sauf prélèvements sociaux). Plafond : 150 000€.
+          </p>
+        </div>
+
+        <!-- Carte 2 : Assurance vie -->
+        <div class="enveloppe-card">
+          <h3>📋 Assurance Vie</h3>
+          <p>
+            Enveloppe très flexible. Après 8 ans, <strong>fiscalité réduite</strong>
+            sur les retraits. Permet d'investir en ETF, obligations ou fonds euros.
+            Pas de plafond de versement.
+          </p>
+        </div>
+
+        <!-- Carte 3 : CTO -->
+        <div class="enveloppe-card">
+          <h3>🌍 Compte-Titres (CTO)</h3>
+          <p>
+            Le compte le plus libre : tu peux acheter <strong>n'importe quel actif mondial</strong>
+            (ETF US, actions japonaises...). Mais les gains sont imposés chaque année à 30%.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ASIDE : conseil important -->
+    <!-- BALISE <aside> : information complémentaire -->
+    <aside>
+      <h3>🚀 Par où commencer concrètement ?</h3>
+      <p>
+        Pour un débutant, la combinaison idéale est :
+        <strong>PEA + ETF World</strong> (ex : MSCI World).
+        Tu investis régulièrement chaque mois une petite somme dans un ETF qui suit
+        les 1600 plus grandes entreprises mondiales. Simple, efficace, peu coûteux.
+      </p>
+    </aside>
+
+    <!-- Navigation entre pages -->
+    <div class="nav-pages">
+      <!-- BALISE <a> : lien page précédente -->
+      <a href="les-bases.html" class="btn btn-contour">← Les bases</a>
+      <span style="color:var(--gris); font-size:0.85rem;">Page 3 sur 7</span>
+      <!-- BALISE <a> : lien page suivante -->
+      <a href="#" class="btn btn-or">Les stratégies → <small style="display:block; font-size:0.7rem; font-weight:400">(bientôt disponible)</small></a>
+    </div>
+
+  </main>
+  <!-- ☝️ Fin de <main> -->
+
+  <!-- FOOTER -->
+  <!-- BALISE <footer> : pied de page -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>InvestirFuté</strong> — Créé par <strong>Titouan Fauré Thomazo</strong> —
+      Site éducatif, pas de conseils financiers personnalisés.
+      <a href="#">Mentions légales</a>
+    </p>
+    <p style="margin-top:8px; font-size:0.8rem; color:#4a6080;">
+      Créé avec ❤️ en HTML pur · Étape 2 sur 7
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

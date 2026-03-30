@@ -1,0 +1,550 @@
+/* ============================================================
+   INVESTIRFUTÉ — style.css
+   Feuille de style COMMUNE à toutes les pages du site.
+
+   ☝️ NOUVEAUTÉ ÉTAPE 3 : au lieu d'écrire le CSS dans chaque
+   fichier HTML avec <style>...</style>, on le met ici une seule fois.
+   Chaque page HTML le charge avec :
+      <link rel="stylesheet" href="style.css">
+============================================================ */
+
+
+/* ==============================================================
+   1. VARIABLES CSS — La "palette" de couleurs du site
+   On définit des noms pour les couleurs une seule fois.
+   Si on veut changer une couleur, on ne modifie qu'une ligne !
+   Syntaxe : --nom-variable: valeur;
+   Utilisation : color: var(--nom-variable);
+============================================================== */
+:root {
+  /* Couleurs principales */
+  --or:        #C9A84C;   /* doré : titres, accents, liens actifs  */
+  --or-clair:  #F0D080;   /* or clair : dégradés de boutons         */
+  --marine:    #0A1628;   /* bleu très foncé : fond de la page      */
+  --bleu:      #1B3A6B;   /* bleu moyen : header, cartes            */
+  --blanc:     #F8F5EE;   /* blanc cassé : texte principal          */
+  --gris:      #8A9BB5;   /* gris-bleu : texte secondaire           */
+  --vert:      #2ECC71;   /* vert : positif, gains                  */
+  --rouge:     #E74C3C;   /* rouge : négatif, risques               */
+
+  /* Espacements (pour être cohérent partout) */
+  --padding-page: 5%;     /* marge latérale des sections            */
+  --rayon:        8px;    /* arrondi des cartes                     */
+
+  /* Typographie */
+  --font-titre: 'Playfair Display', serif;
+  --font-corps: 'Source Sans 3', sans-serif;
+}
+
+
+/* ==============================================================
+   2. RESET & BASE
+   On remet à zéro les styles par défaut du navigateur,
+   puis on définit les styles de base du <body>.
+============================================================== */
+
+/* La propriété * sélectionne TOUS les éléments */
+* {
+  margin: 0;          /* supprime les marges par défaut */
+  padding: 0;         /* supprime le rembourrage par défaut */
+  box-sizing: border-box; /* les bordures sont incluses dans la taille */
+}
+
+/* Import des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+body {
+  font-family: var(--font-corps);
+  background-color: var(--marine);  /* fond sombre */
+  color: var(--blanc);              /* texte clair par défaut */
+  line-height: 1.7;                 /* interligne confortable */
+}
+
+/* Tous les liens : on enlève le soulignement par défaut */
+a { text-decoration: none; }
+
+/* Texte en gras mis en avant */
+strong { color: var(--blanc); }
+
+
+/* ==============================================================
+   3. TYPOGRAPHIE
+   Styles pour les titres h1 → h3 et les paragraphes <p>
+   On utilise clamp() pour que la taille s'adapte à l'écran :
+   clamp(min, idéal, max)
+============================================================== */
+
+h1 {
+  font-family: var(--font-titre);
+  font-size: clamp(2rem, 6vw, 4.5rem); /* entre 2rem et 4.5rem selon l'écran */
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--blanc);
+}
+
+/* em dans un h1 = mot mis en valeur en or */
+h1 em {
+  font-style: normal;
+  color: var(--or);
+}
+
+h2 {
+  font-family: var(--font-titre);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  color: var(--blanc);
+  margin-bottom: 30px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2); /* ligne or transparente */
+}
+
+h3 {
+  font-family: var(--font-titre);
+  font-size: 1.15rem;
+  color: var(--or);
+  margin-bottom: 8px;
+}
+
+p {
+  color: var(--gris);
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+
+
+/* ==============================================================
+   4. HEADER & NAVIGATION
+   Barre du haut, commune à toutes les pages.
+   position: sticky = elle reste visible quand on scrolle.
+============================================================== */
+
+header {
+  /* Dégradé de couleur de gauche à droite */
+  background: linear-gradient(135deg, var(--marine) 0%, var(--bleu) 100%);
+  border-bottom: 2px solid var(--or);     /* ligne or en bas */
+  padding: 0 var(--padding-page);
+  position: sticky;   /* ☝️ la barre reste en haut quand on scrolle */
+  top: 0;
+  z-index: 100;       /* elle passe au-dessus du reste */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+/* Logo */
+.logo {
+  font-family: var(--font-titre);
+  font-size: 1.5rem;
+  color: var(--or);
+  letter-spacing: 1px;
+}
+.logo span { color: var(--blanc); }
+
+/* Menu de navigation */
+nav ul {
+  list-style: none;     /* ☝️ enlève les puces */
+  display: flex;        /* éléments côte à côte */
+  gap: 30px;            /* espace entre les liens */
+}
+
+nav ul li a {
+  color: var(--gris);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase; /* met en majuscules */
+  transition: color 0.2s;    /* animation douce au survol */
+}
+
+/* Au survol et sur la page active */
+nav ul li a:hover,
+nav ul li a.actif {
+  color: var(--or);
+}
+
+
+/* ==============================================================
+   5. BANNIÈRE DE PAGE (sous le header)
+   L'intro en haut de chaque page secondaire.
+   On utilise un background avec radial-gradient pour l'effet lumineux.
+============================================================== */
+
+.page-banner {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(44, 95, 163, 0.25) 0%, transparent 60%),
+    var(--marine);
+  padding: 70px var(--padding-page);
+  text-align: center;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  position: relative;
+  overflow: hidden;   /* cache ce qui dépasse (la grille décorative) */
+}
+
+/* Grille décorative en fond (pseudo-élément ::before) */
+/* ::before crée un élément invisible avant le contenu */
+.page-banner::before {
+  content: '';          /* obligatoire pour les pseudo-éléments */
+  position: absolute;
+  inset: 0;             /* couvre tout le parent */
+  background-image:
+    linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;  /* taille des cases de la grille */
+  pointer-events: none;         /* la grille n'intercepte pas les clics */
+}
+
+/* Fil d'ariane (Accueil › Les bases › ...) */
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--gris);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative; /* passe devant le ::before */
+}
+.breadcrumb a       { color: var(--or); }
+.breadcrumb a:hover { text-decoration: underline; }
+
+.page-banner h1 { position: relative; }
+.page-banner p  { color: var(--gris); max-width: 550px; margin: 16px auto 0; position: relative; }
+
+
+/* ==============================================================
+   6. CONTENU PRINCIPAL
+   Styles généraux pour le <main> et les sections.
+============================================================== */
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;         /* centrage horizontal */
+  padding: 70px var(--padding-page);
+}
+
+/* Étiquette orange au-dessus des titres h2 */
+.section-label {
+  color: var(--or);
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;          /* occupe sa propre ligne */
+}
+
+
+/* ==============================================================
+   7. LES CARTES (cards)
+   Conteneurs avec fond semi-transparent et bordure.
+   On les réutilise sur toutes les pages.
+============================================================== */
+
+.card {
+  background: rgba(27, 58, 107, 0.3);  /* bleu semi-transparent */
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-top: 3px solid var(--or);     /* trait or en haut */
+  border-radius: var(--rayon);
+  padding: 30px 24px;
+  transition: transform 0.2s, border-color 0.2s; /* animation au survol */
+}
+
+.card:hover {
+  transform: translateY(-4px);    /* soulève la carte au survol */
+  border-color: var(--or);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+
+/* ==============================================================
+   8. LES GRILLES (layouts)
+   On utilise CSS Grid pour aligner les éléments en colonnes.
+   grid-template-columns définit le nombre et la taille des colonnes.
+============================================================== */
+
+/* Grille 2 colonnes égales */
+.grille-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* 1fr = 1 fraction de l'espace dispo */
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+/* Grille auto : s'adapte au nombre d'éléments */
+.grille-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* ☝️ auto-fit = autant de colonnes que possible
+         minmax = chaque colonne fait au minimum 240px */
+  gap: 20px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+
+
+/* ==============================================================
+   9. LES BOUTONS
+   Deux variantes : plein (doré) et contour.
+   On utilise display: inline-block pour pouvoir mettre padding.
+============================================================== */
+
+.btn {
+  display: inline-block;
+  padding: 14px 36px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px);   /* lève légèrement au survol */
+  box-shadow: 0 8px 25px rgba(201, 168, 76, 0.2);
+}
+
+/* Bouton plein doré */
+.btn-or {
+  background: linear-gradient(135deg, var(--or), var(--or-clair));
+  color: var(--marine);
+}
+
+/* Bouton contour doré */
+.btn-contour {
+  border: 1.5px solid var(--or);
+  color: var(--or);
+  background: transparent;
+}
+
+
+/* ==============================================================
+   10. ASIDE (encadrés "À retenir")
+   BALISE <aside> : contenu secondaire / conseil
+   La bordure gauche épaisse en or attire l'oeil.
+============================================================== */
+
+aside {
+  background: linear-gradient(
+    135deg,
+    rgba(201, 168, 76, 0.08),
+    rgba(27, 58, 107, 0.2)
+  );
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-left: 4px solid var(--or);    /* ☝️ trait vertical or à gauche */
+  border-radius: 0 var(--rayon) var(--rayon) 0;
+  padding: 28px 30px;
+  margin: 40px 0;
+}
+
+aside h3 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+aside p { margin: 0; font-size: 0.97rem; }
+
+
+/* ==============================================================
+   11. NAVIGATION ENTRE PAGES (bas de contenu)
+   Barre avec bouton "précédent" et "suivant".
+============================================================== */
+
+.nav-pages {
+  display: flex;
+  justify-content: space-between;  /* pousse les boutons aux extrémités */
+  align-items: center;
+  padding: 30px 0;
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  margin-top: 40px;
+  flex-wrap: wrap;    /* passe à la ligne si l'écran est petit */
+  gap: 16px;
+}
+
+
+/* ==============================================================
+   12. BADGES & TAGS
+   Petites étiquettes colorées.
+============================================================== */
+
+.badge {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--or);
+  color: var(--or);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 20px;
+  border-radius: 50px;   /* arrondi total = pastille */
+  margin-bottom: 28px;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 50px;
+  margin-bottom: 14px;
+}
+.tag.rouge { background: rgba(231, 76, 60, 0.15); color: var(--rouge); }
+.tag.vert  { background: rgba(46, 204, 113, 0.15); color: var(--vert); }
+
+
+/* ==============================================================
+   13. LISTE PERSONNALISÉE (✓ et ✗)
+   On remplace les puces par des coches ou des croix.
+============================================================== */
+
+.liste-check {
+  list-style: none;    /* ☝️ supprime les puces par défaut */
+  margin: 12px 0 20px;
+}
+
+.liste-check li {
+  padding: 8px 0 8px 28px;
+  position: relative;   /* pour positionner le ::before */
+  color: var(--gris);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.07);
+  font-size: 0.97rem;
+}
+
+/* Coche verte par défaut */
+.liste-check li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--vert);
+  font-weight: 700;
+}
+
+/* Croix rouge pour les éléments négatifs */
+.liste-check li.non::before {
+  content: '✗';
+  color: var(--rouge);
+}
+
+
+/* ==============================================================
+   14. HERO (grande bannière de l'accueil)
+============================================================== */
+
+.hero {
+  min-height: 92vh;       /* au moins toute la hauteur de l'écran */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px var(--padding-page);
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(44, 95, 163, 0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(201, 168, 76, 0.10) 0%, transparent 55%),
+    var(--marine);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201, 168, 76, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Statistiques sous le texte hero */
+.stats {
+  display: flex;
+  gap: 50px;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(201, 168, 76, 0.2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-item { text-align: center; }
+
+.stat-nb {
+  font-family: var(--font-titre);
+  font-size: 2.2rem;
+  color: var(--or);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+/* Grille intro (texte + citation) */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-top: 50px;
+}
+.intro-text p { margin: 0 0 16px; max-width: 100%; }
+
+
+/* ==============================================================
+   15. FOOTER
+   Pied de page commun à toutes les pages.
+============================================================== */
+
+footer {
+  background: rgba(10, 22, 40, 0.9);
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  text-align: center;
+  padding: 40px var(--padding-page);
+  color: var(--gris);
+  font-size: 0.88rem;
+}
+
+footer a { color: var(--or); }
+footer a:hover { text-decoration: underline; }
+
+.footer-sub {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #4a6080;
+}
+
+
+/* ==============================================================
+   16. RESPONSIVE — Adaptation mobile
+   Les règles à l'intérieur de @media ne s'appliquent que si
+   l'écran est plus petit que 768px (tablette / téléphone).
+============================================================== */
+
+@media (max-width: 768px) {
+
+  /* Cache le menu sur mobile (on le fera mieux à l'étape 6 avec JS) */
+  nav ul { display: none; }
+
+  /* Les grilles passent en 1 colonne sur mobile */
+  .grille-2    { grid-template-columns: 1fr; }
+  .intro-grid  { grid-template-columns: 1fr; gap: 30px; }
+
+  /* Réduit l'espace entre les stats */
+  .stats { gap: 30px; }
+
+  /* Les boutons prennent toute la largeur */
+  .btn { width: 100%; text-align: center; margin: 6px 0; }
+
+}

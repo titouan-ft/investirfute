@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvestirFuté — Stratégies</title>
+
+  <!-- Chargement de la feuille de style commune (étape 3) -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ============================================================
+       ÉTAPE 4 — CSS AVANCÉ
+       Nouveautés apprises ici :
+       1. Flexbox avancé (wrap, align, justify combinés)
+       2. CSS Grid avancé (zones nommées, asymétrie)
+       3. Animations @keyframes
+       4. Transitions multi-propriétés
+       5. Pseudo-classes :nth-child, :first-child
+       6. Responsive mobile complet (hamburger, stack)
+       7. CSS custom properties dynamiques
+    ============================================================ */
+
+
+    /* ============================================================
+       1. HERO DE PAGE — avec animation d'entrée
+       @keyframes : définit une animation étape par étape
+       animation : applique l'animation à un élément
+    ============================================================ */
+
+    /* On définit l'animation "apparaître depuis le bas" */
+    @keyframes monter {
+      from {
+        opacity: 0;
+        transform: translateY(30px); /* démarre 30px plus bas */
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);    /* arrive à sa position normale */
+      }
+    }
+
+    /* Animation pour les éléments qui arrivent depuis la gauche */
+    @keyframes venir-gauche {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Animation de pulsation pour les badges */
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.3); }
+      50%       { box-shadow: 0 0 0 8px rgba(201, 168, 76, 0); }
+    }
+
+    .page-banner .breadcrumb {
+      animation: monter 0.5s ease both;            /* durée, accélération, remplissage */
+      animation-delay: 0.1s;                        /* décalage avant démarrage */
+    }
+
+    .page-banner h1 {
+      animation: monter 0.5s ease both;
+      animation-delay: 0.2s;
+    }
+
+    .page-banner p {
+      animation: monter 0.5s ease both;
+      animation-delay: 0.35s;
+    }
+
+
+    /* ============================================================
+       2. BARRE DE PROGRESSION (pour illustrer les niveaux)
+       On utilise un div vide dont on anime la largeur.
+    ============================================================ */
+
+    .progress-wrap {
+      background: rgba(255,255,255,0.07);
+      border-radius: 50px;
+      height: 6px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--or), var(--or-clair));
+      /* La largeur est définie par une variable CSS inline dans le HTML */
+      width: var(--pct, 0%);
+      /* Animation : la barre se remplit progressivement */
+      animation: remplir 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-delay: var(--delay, 0.3s);
+    }
+
+    @keyframes remplir {
+      from { width: 0%; }
+      to   { width: var(--pct, 0%); }
+    }
+
+
+    /* ============================================================
+       3. LAYOUT PRINCIPAL — CSS Grid avec zones asymétriques
+       grid-template-areas : on nomme les zones de la grille
+    ============================================================ */
+
+    .strategies-layout {
+      display: grid;
+      /* 2/3 pour le contenu principal, 1/3 pour la sidebar */
+      grid-template-columns: 1fr 340px;
+      grid-template-areas: "contenu sidebar";  /* zones nommées */
+      gap: 40px;
+      align-items: start;
+      margin-bottom: 60px;
+    }
+
+    .zone-contenu { grid-area: contenu; }  /* ← référence la zone nommée */
+    .zone-sidebar  { grid-area: sidebar; }
+
+
+    /* ============================================================
+       4. CARTES STRATÉGIES — Flexbox avancé + hover élaboré
+    ============================================================ */
+
+    .strategie-card {
+      background: rgba(27, 58, 107, 0.25);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+
+      /* Flexbox : on organise le contenu en colonne */
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      /* Transition sur PLUSIEURS propriétés à la fois */
+      transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+
+      /* Animation d'entrée avec délai différent pour chaque carte */
+      animation: venir-gauche 0.6s ease both;
+    }
+
+    /* :nth-child(n) : sélectionne le n-ième élément */
+    .strategie-card:nth-child(1) { animation-delay: 0.1s; }
+    .strategie-card:nth-child(2) { animation-delay: 0.2s; }
+    .strategie-card:nth-child(3) { animation-delay: 0.3s; }
+    .strategie-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .strategie-card:hover {
+      transform: translateX(6px);
+      border-color: rgba(201, 168, 76, 0.5);
+      box-shadow:
+        -4px 0 0 var(--or),          /* trait vertical or à gauche */
+        0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    /* Élément décoratif en fond de la carte (grand emoji flou) */
+    .strategie-card::before {
+      content: attr(data-emoji);     /* récupère l'attribut data-emoji du HTML */
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 6rem;
+      opacity: 0.04;                  /* quasi invisible, juste décoratif */
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .strategie-card:hover::before {
+      opacity: 0.07;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    /* En-tête de carte : emoji + titre sur la même ligne avec Flexbox */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .card-emoji-box {
+      width: 52px;
+      height: 52px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;                /* ☝️ empêche le carré de rétrécir */
+      transition: background 0.3s;
+    }
+
+    .strategie-card:hover .card-emoji-box {
+      background: rgba(201, 168, 76, 0.2);
+    }
+
+    .card-titres { flex: 1; }        /* prend tout l'espace restant */
+    .card-titres h3 { margin-bottom: 2px; }
+    .card-titres small {
+      color: var(--gris);
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Pied de carte : méta-infos alignées avec Flexbox */
+    .card-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;              /* passe à la ligne si besoin */
+      padding-top: 16px;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .meta-label {
+      font-size: 0.72rem;
+      color: var(--gris);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--blanc);
+    }
+
+    .meta-val.vert  { color: var(--vert); }
+    .meta-val.or    { color: var(--or); }
+    .meta-val.rouge { color: var(--rouge); }
+
+
+    /* ============================================================
+       5. SIDEBAR — position sticky
+       position: sticky + top: Xpx = reste visible en scrollant
+    ============================================================ */
+
+    .sidebar-inner {
+      position: sticky;
+      top: 90px;                     /* 70px (header) + 20px d'écart */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card {
+      background: rgba(27, 58, 107, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-radius: 12px;
+      padding: 26px;
+    }
+
+    .sidebar-card h3 {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    /* Liste avec barres de progression */
+    .niveau-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .niveau-list li { display: flex; flex-direction: column; gap: 5px; }
+
+    .niveau-row {
+      display: flex;
+      justify-content: space-between;  /* pousse label et valeur aux extrémités */
+      align-items: center;
+    }
+
+    .niveau-nom  { font-size: 0.9rem; color: var(--blanc); }
+    .niveau-pct  { font-size: 0.82rem; color: var(--or); font-weight: 600; }
+
+    /* Mini calendrier de portefeuille */
+    .alloc-ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--or)        0%  50%,   /* ETF World : 50% */
+        var(--vert)      50% 70%,   /* Obligations : 20% */
+        #4A90D9          70% 85%,   /* SCPI : 15% */
+        rgba(255,255,255,0.1) 85% 100%  /* Livret A : 15% */
+      );
+      margin: 16px auto;
+      position: relative;
+    }
+
+    /* Cercle blanc au centre pour faire un "donut" */
+    .alloc-ring::after {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      background: #0e1f3a;
+      border-radius: 50%;
+    }
+
+    .alloc-legend {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .alloc-legend li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--gris);
+    }
+
+    .dot-legend {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+
+    /* ============================================================
+       6. SECTION "COMPARATIF" — tableau visuel avec Flexbox
+    ============================================================ */
+
+    .comparatif {
+      display: flex;
+      gap: 0;
+      border-radius: 12px;
+      overflow: hidden;              /* arrondit les coins des enfants */
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      margin: 40px 0 60px;
+    }
+
+    /* Chaque colonne du tableau */
+    .col-comp {
+      flex: 1;                        /* toutes les colonnes font la même taille */
+      padding: 28px 22px;
+      border-right: 1px solid rgba(201, 168, 76, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: rgba(27, 58, 107, 0.15);
+      transition: background 0.2s;
+    }
+
+    .col-comp:last-child { border-right: none; }  /* enlève la bordure du dernier */
+
+    /* :first-child : sélectionne uniquement le premier enfant */
+    .col-comp:first-child { background: rgba(201, 168, 76, 0.05); }
+
+    .col-comp:hover { background: rgba(27, 58, 107, 0.35); }
+
+    .col-comp h4 {
+      font-family: var(--font-titre);
+      font-size: 1rem;
+      color: var(--or);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    .col-comp .chiffre {
+      font-family: var(--font-titre);
+      font-size: 2rem;
+      color: var(--blanc);
+      line-height: 1;
+    }
+
+    .col-comp .chiffre span {
+      font-size: 0.85rem;
+      color: var(--gris);
+      font-family: var(--font-corps);
+    }
+
+    .col-comp p {
+      font-size: 0.88rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+
+    /* ============================================================
+       7. MENU HAMBURGER — responsive mobile
+       On cache/montre le menu avec une checkbox CSS (sans JS !)
+    ============================================================ */
+
+    /* On cache la checkbox elle-même */
+    #menu-toggle { display: none; }
+
+    /* L'icône hamburger ☰ visible uniquement sur mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--or);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* Quand la checkbox est cochée, anime les barres en croix ✕ */
+    #menu-toggle:checked ~ header .hamburger span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    #menu-toggle:checked ~ header .hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle:checked ~ header .hamburger span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Menu mobile déroulant */
+    #menu-toggle:checked ~ header nav ul {
+      display: flex !important;      /* force l'affichage (écrase display:none) */
+      flex-direction: column;
+      position: fixed;
+      top: 70px;
+      left: 0; right: 0;
+      background: var(--marine);
+      border-bottom: 2px solid var(--or);
+      padding: 20px;
+      gap: 0;
+      z-index: 99;
+    }
+
+    #menu-toggle:checked ~ header nav ul li a {
+      display: block;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+       8. RESPONSIVE COMPLET
+    ============================================================ */
+
+    @media (max-width: 900px) {
+      /* Sur tablette : la sidebar passe sous le contenu */
+      .strategies-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "contenu"
+          "sidebar";
+      }
+
+      .sidebar-inner { position: static; } /* plus sticky sur mobile */
+    }
+
+    @media (max-width: 768px) {
+      /* Affiche le hamburger, cache le menu */
+      .hamburger { display: flex; }
+      nav ul { display: none; }
+
+      /* Le comparatif passe en colonne */
+      .comparatif { flex-direction: column; }
+      .col-comp { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.1); }
+      .col-comp:last-child { border-bottom: none; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!--
+    ASTUCE CSS PUR : une checkbox cachée avant le header
+    permet d'ouvrir/fermer le menu mobile sans JavaScript !
+    On l'active en cliquant sur le label .hamburger
+  -->
+  <input type="checkbox" id="menu-toggle">
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo">Investir<span>Futé</span></a>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="les-bases.html">Les bases</a></li>
+        <li><a href="les-produits.html">Les produits</a></li>
+        <li><a href="strategies.html" class="actif">Stratégies</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="simulateur.html">Simulateur</a></li>
+      </ul>
+    </nav>
+
+    <!--
+      BALISE <label for="menu-toggle"> : cliquer ici coche/décoche
+      la checkbox #menu-toggle, ce qui active les règles CSS du hamburger
+    -->
+    <label for="menu-toggle" class="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+  </header>
+
+  <!-- BANNIÈRE -->
+  <section class="page-banner">
+    <p class="breadcrumb">
+      <a href="index.html">Accueil</a> › Stratégies
+    </p>
+    <h1>Les <em>stratégies</em> gagnantes</h1>
+    <p>
+      Les méthodes éprouvées pour investir intelligemment,
+      limiter les risques et faire fructifier ton capital sur le long terme.
+    </p>
+  </section>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ============================================================
+         LAYOUT PRINCIPAL : contenu + sidebar
+    ============================================================ -->
+    <div class="strategies-layout">
+
+      <!-- ---- ZONE CONTENU ---- -->
+      <div class="zone-contenu">
+
+        <span class="section-label">Les 4 grandes stratégies</span>
+        <h2>Comment investir concrètement ?</h2>
+
+        <!-- ============================
+             CARTE 1 : DCA
+             data-emoji = attribut personnalisé pour le ::before CSS
+        ============================ -->
+        <div class="strategie-card" data-emoji="📅">
+
+          <!-- En-tête avec Flexbox : emoji + titres côte à côte -->
+          <div class="card-header">
+            <div class="card-emoji-box">📅</div>
+            <div class="card-titres">
+              <h3>Le DCA — Dollar Cost Averaging</h3>
+              <small>Investissement régulier</small>
+            </div>
+          </div>
+
+          <!-- Corps de la carte -->
+          <p>
+            Tu investis <strong>la même somme chaque mois</strong>, peu importe le cours du marché.
+            Quand les marchés baissent, tu achètes plus de parts. Quand ils montent, tu en achètes moins.
+            Sur le long terme, ton prix d'achat moyen se lisse automatiquement.
+          </p>
+          <p>
+            C'est la stratégie idéale pour les débutants : pas besoin de "timer" le marché,
+            pas de stress, juste de la régularité.
+          </p>
+
+          <!-- Méta-infos en bas de carte (Flexbox) -->
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="meta-label">Difficulté</span>
+              <span class="meta-val vert">Très facile</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Horizon</span>
+              <span class="meta-val or">5–30 ans</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Temps requis</span>
+              <span class="meta-val">5 min/mois</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Rendement espéré</span>
+              <span class="meta-val vert">~7%/an</span>
+            </div>
+          </div>
+
+        </div>
+        <!-- ☝️ Fin .strategie-card DCA -->
+
+        <!-- CARTE 2 : Diversification -->
+        <div class="strategie-card" data-emoji="🌍">
+          <div class="card-header">
+            <div class="card-emoji-box">🌍</div>
+            <div class="card-titres">
+              <h3>La diversification</h3>
+              <small>Ne pas mettre tous ses œufs dans le même panier</small>
+            </div>
+          </div>
+
+          <p>
+            Répartir son capital sur <strong>plusieurs actifs, secteurs et zones géographiques</strong>
+            réduit le risque global. Si un secteur s'effondre, les autres compensent.
+            Un ETF World diversifie automatiquement sur 1600 entreprises dans 23 pays.
+          </p>
+
+          <!-- Barre de progression (niveau de protection) -->
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:0.82rem; color:var(--gris);">Protection contre le risque</span>
+              <span style="font-size:0.82rem; color:var(--or);">85%</span>
+            </div>
+            <div class="progress-wrap">
+              <!--
+                style="--pct:85%; --delay:0.5s"
+                On passe des variables CSS directement dans le HTML !
+                Le CSS les lit avec var(--pct) et var(--delay)
+              -->
+              <div class="progress-bar" style="--pct:85%; --delay:0.5s"></div>
+            </div>
+          </div>
+
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="meta-label">Difficulté</span>
+              <span class="meta-val vert">Facile</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Instrument</span>
+              <span class="meta-val or">ETF World</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Risque réduit</span>
+              <span class="meta-val vert">Oui</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 3 : Long terme -->
+        <div class="strategie-card" data-emoji="⏳">
+          <div class="card-header">
+            <div class="card-emoji-box">⏳</div>
+            <div class="card-titres">
+              <h3>L'investissement long terme</h3>
+              <small>Buy and Hold</small>
+            </div>
+          </div>
+
+          <p>
+            Acheter et <strong>conserver sans vendre</strong>, même en cas de krach.
+            Les données historiques montrent que les marchés ont toujours fini par remonter
+            après chaque crise (2008, COVID, etc.). Plus ton horizon est long, plus le risque baisse.
+          </p>
+
+          <!-- Tableau de démonstration de la puissance des intérêts composés -->
+          <div style="
+            background: rgba(201,168,76,0.05);
+            border: 1px solid rgba(201,168,76,0.15);
+            border-radius: 8px;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            text-align: center;
+          ">
+            <!-- :first-child : la ligne d'en-tête -->
+            <div style="font-size:0.75rem; color:var(--gris); text-transform:uppercase; letter-spacing:1px;">Années</div>
+            <div style="font-size:0.75rem; color:var(--gris); text-transform:uppercase; letter-spacing:1px;">Capital mis</div>
+            <div style="font-size:0.75rem; color:var(--gris); text-transform:uppercase; letter-spacing:1px;">Valeur finale</div>
+            <div style="font-size:0.75rem; color:var(--gris); text-transform:uppercase; letter-spacing:1px;">Gain</div>
+
+            <div>10 ans</div>
+            <div style="color:var(--gris)">1 200€</div>
+            <div style="color:var(--vert)">2 095€</div>
+            <div style="color:var(--vert)">+75%</div>
+
+            <div>20 ans</div>
+            <div style="color:var(--gris)">2 400€</div>
+            <div style="color:var(--vert)">6 142€</div>
+            <div style="color:var(--vert)">+156%</div>
+
+            <div>30 ans</div>
+            <div style="color:var(--gris)">3 600€</div>
+            <div style="color:var(--vert)">18 025€</div>
+            <div style="color:var(--vert)">+400%</div>
+          </div>
+          <p style="font-size:0.8rem; text-align:right; margin:0;">
+            Exemple : 100€/mois, 7%/an
+          </p>
+
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="meta-label">Difficulté</span>
+              <span class="meta-val vert">Facile</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Horizon minimum</span>
+              <span class="meta-val or">10 ans</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Actions requises</span>
+              <span class="meta-val">Presque aucune</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 4 : Portefeuille permanent -->
+        <div class="strategie-card" data-emoji="⚖️">
+          <div class="card-header">
+            <div class="card-emoji-box">⚖️</div>
+            <div class="card-titres">
+              <h3>Le rééquilibrage de portefeuille</h3>
+              <small>Rebalancing annuel</small>
+            </div>
+          </div>
+
+          <p>
+            Une fois par an, tu vérifies que la répartition de ton portefeuille correspond
+            toujours à ta cible. Si les actions ont trop progressé,
+            tu en <strong>vends une partie pour racheter des obligations</strong> et rétablir l'équilibre.
+            C'est la discipline qui fait la différence sur 20 ans.
+          </p>
+
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="meta-label">Fréquence</span>
+              <span class="meta-val or">1x/an</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Difficulté</span>
+              <span class="meta-val or">Modérée</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Intérêt</span>
+              <span class="meta-val vert">Contrôle du risque</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- ☝️ Fin .zone-contenu -->
+
+
+      <!-- ---- ZONE SIDEBAR ---- -->
+      <aside class="zone-sidebar">
+        <div class="sidebar-inner">
+
+          <!-- Mini-widget : niveaux de risque -->
+          <div class="sidebar-card">
+            <h3>📊 Profils d'investisseur</h3>
+
+            <!-- BALISE <ul> avec Flexbox colonne -->
+            <ul class="niveau-list">
+              <li>
+                <div class="niveau-row">
+                  <span class="niveau-nom">Prudent</span>
+                  <span class="niveau-pct">30%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar" style="--pct:30%; --delay:0.4s"></div>
+                </div>
+              </li>
+              <li>
+                <div class="niveau-row">
+                  <span class="niveau-nom">Équilibré</span>
+                  <span class="niveau-pct">60%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar" style="--pct:60%; --delay:0.5s"></div>
+                </div>
+              </li>
+              <li>
+                <div class="niveau-row">
+                  <span class="niveau-nom">Dynamique</span>
+                  <span class="niveau-pct">85%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar" style="--pct:85%; --delay:0.6s"></div>
+                </div>
+              </li>
+              <li>
+                <div class="niveau-row">
+                  <span class="niveau-nom">Offensif</span>
+                  <span class="niveau-pct">100%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar" style="--pct:100%; --delay:0.7s; background: linear-gradient(90deg, var(--rouge), #ff6b6b)"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Mini-widget : répartition exemple -->
+          <div class="sidebar-card">
+            <h3>🎯 Portefeuille débutant type</h3>
+
+            <!--
+              Donut chart en CSS pur avec conic-gradient
+              Pas besoin de librairie ou de JavaScript !
+            -->
+            <div class="alloc-ring"></div>
+
+            <!-- BALISE <ul> avec items colorés -->
+            <ul class="alloc-legend">
+              <li>
+                <div class="dot-legend" style="background:var(--or)"></div>
+                ETF World — 50%
+              </li>
+              <li>
+                <div class="dot-legend" style="background:var(--vert)"></div>
+                Obligations — 20%
+              </li>
+              <li>
+                <div class="dot-legend" style="background:#4A90D9"></div>
+                SCPI — 15%
+              </li>
+              <li>
+                <div class="dot-legend" style="background:rgba(255,255,255,0.2)"></div>
+                Livret A — 15%
+              </li>
+            </ul>
+          </div>
+
+          <!-- CTA vers simulateur -->
+          <div class="sidebar-card" style="text-align:center; background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(27,58,107,0.3));">
+            <span style="font-size:2rem">🧮</span>
+            <h3 style="margin:12px 0 8px; text-align:center;">Calcule ton rendement</h3>
+            <p style="font-size:0.9rem; margin-bottom:16px;">
+              Notre simulateur calcule exactement combien tu auras dans X années.
+            </p>
+            <a href="#" class="btn btn-or" style="width:100%; text-align:center; margin:0; display:block;">
+              Lancer le simulateur →
+            </a>
+          </div>
+
+        </div>
+      </aside>
+      <!-- ☝️ Fin .zone-sidebar -->
+
+    </div>
+    <!-- ☝️ Fin .strategies-layout -->
+
+
+    <!-- ============================================================
+         COMPARATIF — Tableau horizontal avec Flexbox
+    ============================================================ -->
+    <span class="section-label">Comparatif rapide</span>
+    <h2>Quelle stratégie pour toi ?</h2>
+
+    <!-- Flexbox : 4 colonnes égales, s'adaptent en mobile -->
+    <div class="comparatif">
+
+      <div class="col-comp">
+        <h4>DCA mensuel</h4>
+        <div class="chiffre">100€<span>/mois</span></div>
+        <p>Idéal pour commencer avec peu et investir sans stress.</p>
+        <span class="meta-val vert" style="font-size:0.85rem;">✓ Recommandé débutant</span>
+      </div>
+
+      <div class="col-comp">
+        <h4>ETF World</h4>
+        <div class="chiffre">7%<span>/an moy.</span></div>
+        <p>L'actif de base de tout portefeuille long terme diversifié.</p>
+        <span class="meta-val or" style="font-size:0.85rem;">✓ Simple & efficace</span>
+      </div>
+
+      <div class="col-comp">
+        <h4>Horizon conseillé</h4>
+        <div class="chiffre">10+<span> ans</span></div>
+        <p>Plus tu investis longtemps, plus les intérêts composés font leur effet.</p>
+        <span class="meta-val or" style="font-size:0.85rem;">✓ Patience récompensée</span>
+      </div>
+
+      <div class="col-comp">
+        <h4>Enveloppe fiscale</h4>
+        <div class="chiffre">PEA</div>
+        <p>Exonération d'impôt sur les gains après 5 ans de détention.</p>
+        <span class="meta-val vert" style="font-size:0.85rem;">✓ Avantage fiscal</span>
+      </div>
+
+    </div>
+    <!-- ☝️ Fin .comparatif -->
+
+
+    <!-- Encart aside -->
+    <aside>
+      <h3>🏆 La formule gagnante du débutant</h3>
+      <p>
+        <strong>PEA + ETF MSCI World + DCA de 50 à 200€/mois + horizon 15 ans.</strong>
+        C'est la combinaison recommandée par la quasi-totalité des experts en finance personnelle.
+        Simple, automatisable, et historiquement très performante.
+      </p>
+    </aside>
+
+    <!-- Navigation entre pages -->
+    <div class="nav-pages">
+      <a href="les-produits.html" class="btn btn-contour">← Les produits</a>
+      <span style="color:var(--gris); font-size:0.85rem;">Page 4 sur 7</span>
+      <a href="#" class="btn btn-or">Le simulateur →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>InvestirFuté</strong> — Créé par <strong>Titouan Fauré Thomazo</strong> —
+      Site éducatif, pas de conseils financiers personnalisés.
+      <a href="#">Mentions légales</a>
+    </p>
+    <p class="footer-sub">Créé avec ❤️ en HTML/CSS pur · Étape 4 sur 7</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

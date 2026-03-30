@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvestirFuté — Quiz & Comparatif</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ============================================================
+       ÉTAPE 5 — TABLEAUX ET FORMULAIRES
+       Nouveautés apprises ici :
+       1. Balises de tableau : <table> <thead> <tbody> <tr> <th> <td>
+       2. Balises de formulaire : <form> <fieldset> <legend>
+       3. Inputs : <input> (radio, checkbox, range, text)
+       4. <label> lié à un input avec for="id"
+       5. <select> et <option>
+       6. <textarea>
+       7. Mise en forme avancée des tableaux et formulaires
+    ============================================================ */
+
+
+    /* ============================================================
+       LAYOUT DEUX COLONNES
+    ============================================================ */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: start;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .page-layout { grid-template-columns: 1fr; }
+    }
+
+
+    /* ============================================================
+       STYLES DU TABLEAU <table>
+    ============================================================ */
+
+    /* Conteneur avec scroll horizontal sur mobile */
+    .table-wrap {
+      overflow-x: auto;             /* ☝️ scroll horizontal si le tableau est large */
+      border-radius: 10px;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      margin-bottom: 40px;
+    }
+
+    /* BALISE <table> : le tableau lui-même */
+    table {
+      width: 100%;
+      border-collapse: collapse;    /* ☝️ fusionne les bordures des cellules */
+      font-size: 0.95rem;
+    }
+
+    /* BALISE <caption> : titre du tableau (accessible) */
+    caption {
+      font-family: var(--font-titre);
+      font-size: 1rem;
+      color: var(--or);
+      text-align: left;
+      padding: 18px 20px 12px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    /* BALISE <thead> : en-tête du tableau */
+    /* BALISE <th> : cellule d'en-tête (gras par défaut) */
+    thead th {
+      background: rgba(27, 58, 107, 0.5);
+      color: var(--gris);
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.2);
+      white-space: nowrap;          /* empêche le texte de passer à la ligne */
+    }
+
+    /* Première colonne : texte centré */
+    thead th:first-child { text-align: center; }
+
+    /* BALISE <tbody> : corps du tableau */
+    /* BALISE <tr> : une ligne */
+    /* BALISE <td> : une cellule */
+    tbody tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.2s;
+    }
+
+    /* Ligne zébrée : une ligne sur deux légèrement différente */
+    tbody tr:nth-child(even) {td { background: rgba(27, 58, 107, 0.1); }}
+
+    tbody tr:hover td { background: rgba(201, 168, 76, 0.05); }
+
+    tbody td {
+      padding: 14px 18px;
+      color: var(--gris);
+      vertical-align: middle;       /* ☝️ centre verticalement le contenu */
+    }
+
+    /* Première colonne : nom du produit en blanc */
+    tbody td:first-child {
+      font-weight: 600;
+      color: var(--blanc);
+      text-align: center;
+      font-size: 1.3rem;            /* emoji plus grand */
+    }
+
+    /* Cellule avec valeur positive */
+    td.positif { color: var(--vert); font-weight: 600; }
+    td.negatif { color: var(--rouge); font-weight: 600; }
+    td.neutre  { color: var(--or); font-weight: 600; }
+
+    /* Cellule avec barre de rendement intégrée */
+    .cell-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cell-bar-inner {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .cell-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--or), var(--or-clair));
+    }
+
+    /* BALISE <tfoot> : pied du tableau */
+    tfoot td {
+      padding: 12px 18px;
+      font-size: 0.8rem;
+      color: var(--gris);
+      font-style: italic;
+      border-top: 1px solid rgba(201, 168, 76, 0.15);
+      background: rgba(10, 22, 40, 0.3);
+    }
+
+
+    /* ============================================================
+       STYLES DU FORMULAIRE <form>
+    ============================================================ */
+
+    /* BALISE <form> : conteneur du formulaire */
+    .quiz-form {
+      background: rgba(27, 58, 107, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-radius: 12px;
+      padding: 34px;
+    }
+
+    /* BALISE <fieldset> : groupe de champs liés */
+    /* Ici chaque question = un fieldset */
+    fieldset {
+      border: none;                  /* on enlève la bordure par défaut */
+      margin-bottom: 30px;
+      padding: 0;
+    }
+
+    /* BALISE <legend> : titre du groupe de champs */
+    legend {
+      font-family: var(--font-titre);
+      font-size: 1rem;
+      color: var(--blanc);
+      margin-bottom: 14px;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    legend span {
+      display: inline-block;
+      background: rgba(201, 168, 76, 0.15);
+      color: var(--or);
+      font-family: var(--font-corps);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    /* ---- INPUTS RADIO & CHECKBOX ---- */
+    /* Conteneur d'une option (label + input côte à côte) */
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(201, 168, 76, 0.1);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .option:hover {
+      background: rgba(201, 168, 76, 0.06);
+      border-color: rgba(201, 168, 76, 0.25);
+    }
+
+    /*
+      BALISE <input type="radio"> : choix unique (un seul cochable)
+      BALISE <input type="checkbox"> : choix multiple (plusieurs cochables)
+      On les cache pour dessiner notre propre bouton
+    */
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      appearance: none;             /* ☝️ supprime le style natif du navigateur */
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--gris);
+      border-radius: 50%;           /* cercle pour les radio */
+      flex-shrink: 0;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    /* Checkbox : carré au lieu de cercle */
+    .option input[type="checkbox"] { border-radius: 4px; }
+
+    /* Point central quand coché */
+    .option input[type="radio"]:checked,
+    .option input[type="checkbox"]:checked {
+      border-color: var(--or);
+      background: var(--or);
+    }
+
+    /* Coche blanche à l'intérieur */
+    .option input[type="radio"]:checked::after,
+    .option input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: var(--marine);
+      border-radius: 50%;
+    }
+    .option input[type="checkbox"]:checked::after {
+      content: '✓';
+      color: var(--marine);
+      font-size: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      inset: 0;
+      border-radius: 2px;
+    }
+
+    /* Quand coché : la ligne entière se colore */
+    .option:has(input:checked) {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: rgba(201, 168, 76, 0.4);
+    }
+
+    /* BALISE <label> : texte cliquable lié à l'input */
+    .option label {
+      cursor: pointer;
+      color: var(--gris);
+      font-size: 0.97rem;
+      flex: 1;                       /* prend tout l'espace restant */
+      transition: color 0.2s;
+    }
+
+    .option:has(input:checked) label { color: var(--blanc); }
+
+    /* ---- INPUT RANGE (curseur) ---- */
+    /*
+      BALISE <input type="range"> : un slider (curseur glissant)
+      Utile pour choisir un montant ou une durée
+    */
+    .range-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 8px 0 16px;
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--gris);
+    }
+
+    input[type="range"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* La partie gauche (remplie) du slider */
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--or);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(201,168,76,0.2);
+      transition: box-shadow 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 8px rgba(201,168,76,0.15);
+    }
+
+    /* Affichage de la valeur courante du slider */
+    .range-value {
+      font-family: var(--font-titre);
+      font-size: 1.6rem;
+      color: var(--or);
+      text-align: center;
+    }
+
+    /* ---- INPUT SELECT (liste déroulante) ---- */
+    /*
+      BALISE <select> : menu déroulant
+      BALISE <option> : chaque choix dans le menu
+    */
+    .select-wrap {
+      position: relative;
+      margin: 8px 0 16px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 40px 12px 16px;
+      background: rgba(27, 58, 107, 0.4);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      color: var(--blanc);
+      font-family: var(--font-corps);
+      font-size: 0.97rem;
+      appearance: none;             /* ☝️ supprime la flèche native */
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus { border-color: var(--or); }
+
+    /* Flèche personnalisée avec CSS */
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--or);
+      pointer-events: none;        /* la flèche ne bloque pas les clics */
+    }
+
+    /* Options du select */
+    option {
+      background: #0e1f3a;
+      color: var(--blanc);
+    }
+
+    /* ---- TEXTAREA ---- */
+    /*
+      BALISE <textarea> : zone de texte multi-lignes
+    */
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(27, 58, 107, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      color: var(--blanc);
+      font-family: var(--font-corps);
+      font-size: 0.97rem;
+      resize: vertical;             /* ☝️ redimensionnable en hauteur seulement */
+      min-height: 90px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-top: 8px;
+    }
+
+    textarea:focus { border-color: var(--or); }
+
+    textarea::placeholder { color: rgba(138, 155, 181, 0.5); }
+
+    /* ---- INPUT TEXT ---- */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(27, 58, 107, 0.3);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      color: var(--blanc);
+      font-family: var(--font-corps);
+      font-size: 0.97rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-top: 8px;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="number"]:focus { border-color: var(--or); }
+
+    /* ---- BOUTON SUBMIT ---- */
+    /*
+      BALISE <button type="submit"> : soumet le formulaire
+    */
+    .submit-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(135deg, var(--or), var(--or-clair));
+      color: var(--marine);
+      border: none;
+      padding: 14px 36px;
+      border-radius: 6px;
+      font-family: var(--font-corps);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(201,168,76,0.3);
+    }
+
+    button[type="submit"]:active { transform: translateY(0); }
+
+    /* ---- LABEL FLOTTANT ---- */
+    /* Groupe label au-dessus de l'input */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    /* BALISE <label> autonome (au-dessus de l'input) */
+    .field-group > label {
+      font-size: 0.85rem;
+      color: var(--gris);
+      letter-spacing: 0.5px;
+    }
+
+    /* Compteur de caractères sous le textarea */
+    .field-hint {
+      font-size: 0.78rem;
+      color: rgba(138,155,181,0.6);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+
+    /* ============================================================
+       RÉSULTAT DU QUIZ (caché, affiché après soumission avec JS à l'étape 6)
+    ============================================================ */
+    .resultat {
+      display: none;  /* sera affiché via JS à l'étape 6 */
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(27,58,107,0.3));
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+
+    /* Hamburger (étape 4) */
+    #menu-toggle { display: none; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--or); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+    #menu-toggle:checked ~ header .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #menu-toggle:checked ~ header .hamburger span:nth-child(2) { opacity: 0; }
+    #menu-toggle:checked ~ header .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    #menu-toggle:checked ~ header nav ul { display: flex !important; flex-direction: column; position: fixed; top: 70px; left: 0; right: 0; background: var(--marine); border-bottom: 2px solid var(--or); padding: 20px; gap: 0; z-index: 99; }
+    #menu-toggle:checked ~ header nav ul li a { display: block; padding: 14px 0; border-bottom: 1px solid rgba(201,168,76,0.1); font-size: 1rem; }
+    @media (max-width: 768px) { .hamburger { display: flex; } nav ul { display: none; } }
+
+  </style>
+</head>
+
+<body>
+
+  <input type="checkbox" id="menu-toggle">
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo">Investir<span>Futé</span></a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="les-bases.html">Les bases</a></li>
+        <li><a href="les-produits.html">Les produits</a></li>
+        <li><a href="strategies.html">Stratégies</a></li>
+        <li><a href="quiz.html" class="actif">Quiz</a></li>
+      </ul>
+    </nav>
+    <label for="menu-toggle" class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </label>
+  </header>
+
+  <!-- BANNIÈRE -->
+  <section class="page-banner">
+    <p class="breadcrumb"><a href="index.html">Accueil</a> › Quiz & Comparatif</p>
+    <h1>Quel investisseur <em>es-tu ?</em></h1>
+    <p>Réponds aux questions pour découvrir ton profil, et consulte
+       le comparatif des placements pour faire ton choix.</p>
+  </section>
+
+  <main>
+
+    <div class="page-layout">
+
+      <!-- =====================================================
+           PARTIE GAUCHE : LE TABLEAU COMPARATIF
+           Nouvelles balises : <table> <caption> <thead> <tbody>
+                               <tfoot> <tr> <th> <td>
+      ===================================================== -->
+      <div>
+
+        <span class="section-label">Tableau comparatif</span>
+        <h2>Les placements face à face</h2>
+        <p>
+          Voici les principaux produits d'investissement comparés
+          sur leurs critères clés.
+        </p>
+
+        <!-- BALISE <div class="table-wrap"> : rend le tableau scrollable sur mobile -->
+        <div class="table-wrap">
+
+          <!--
+            BALISE <table> : structure le tableau
+            border-collapse (CSS) : fusionne les bordures
+          -->
+          <table>
+
+            <!-- BALISE <caption> : titre du tableau -->
+            <caption>Comparatif des placements — 2025</caption>
+
+            <!--
+              BALISE <thead> : section d'en-tête du tableau
+              Contient les <th> (cellules d'en-tête)
+            -->
+            <thead>
+              <!-- BALISE <tr> : une ligne du tableau -->
+              <tr>
+                <!-- BALISE <th> : cellule d'en-tête (gras, centré par défaut) -->
+                <th>Produit</th>
+                <th>Rendement / an</th>
+                <th>Risque</th>
+                <th>Liquidité</th>
+                <th>Accessible dès</th>
+                <th>Horizon conseillé</th>
+              </tr>
+            </thead>
+
+            <!--
+              BALISE <tbody> : corps du tableau
+              Contient les lignes de données
+            -->
+            <tbody>
+
+              <!-- BALISE <tr> : chaque ligne = un produit financier -->
+              <tr>
+                <!-- BALISE <td> : cellule de données -->
+                <td>📊 ETF World</td>
+                <td>
+                  <!--
+                    Cellule avec mini barre de rendement intégrée.
+                    On peut mettre du HTML dans une <td> !
+                  -->
+                  <div class="cell-bar">
+                    <span class="positif">7–10%</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:80%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="neutre">Modéré</td>
+                <td class="positif">Haute</td>
+                <td>~10€</td>
+                <td>5–30 ans</td>
+              </tr>
+
+              <tr>
+                <td>📈 Actions</td>
+                <td>
+                  <div class="cell-bar">
+                    <span class="positif">5–15%</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:90%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="negatif">Élevé</td>
+                <td class="positif">Haute</td>
+                <td>~5€</td>
+                <td>3–10 ans</td>
+              </tr>
+
+              <tr>
+                <td>🏛️ Obligations</td>
+                <td>
+                  <div class="cell-bar">
+                    <span class="neutre">2–5%</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:30%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="positif">Faible</td>
+                <td class="neutre">Moyenne</td>
+                <td>~100€</td>
+                <td>1–10 ans</td>
+              </tr>
+
+              <tr>
+                <td>🏠 SCPI</td>
+                <td>
+                  <div class="cell-bar">
+                    <span class="neutre">4–6%</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:50%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="neutre">Modéré</td>
+                <td class="negatif">Faible</td>
+                <td>~200€</td>
+                <td>8–20 ans</td>
+              </tr>
+
+              <tr>
+                <td>💰 Livret A</td>
+                <td>
+                  <div class="cell-bar">
+                    <span class="negatif">3%</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:15%; background: var(--rouge)"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="positif">Nul</td>
+                <td class="positif">Très haute</td>
+                <td>1€</td>
+                <td>Court terme</td>
+              </tr>
+
+              <tr>
+                <td>₿ Crypto</td>
+                <td>
+                  <div class="cell-bar">
+                    <span style="color:#ff6b6b">Très variable</span>
+                    <div class="cell-bar-inner">
+                      <div class="cell-bar-fill" style="width:100%; background: var(--rouge)"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="negatif">Très élevé</td>
+                <td class="positif">Haute</td>
+                <td>~10€</td>
+                <td>Spéculatif</td>
+              </tr>
+
+            </tbody>
+
+            <!--
+              BALISE <tfoot> : pied du tableau
+              Utile pour les notes, totaux ou sources
+            -->
+            <tfoot>
+              <tr>
+                <!--
+                  colspan="6" : la cellule s'étend sur 6 colonnes
+                  (fusionne toutes les colonnes)
+                -->
+                <td colspan="6">
+                  * Rendements historiques, non garantis pour l'avenir. Source : données de marché 2000–2024.
+                </td>
+              </tr>
+            </tfoot>
+
+          </table>
+          <!-- ☝️ Fin <table> -->
+
+        </div>
+        <!-- ☝️ Fin .table-wrap -->
+
+        <!-- Encart récapitulatif -->
+        <aside>
+          <h3>📌 Le verdict</h3>
+          <p>
+            Pour un débutant, <strong>l'ETF World en PEA</strong> offre le meilleur
+            équilibre rendement/risque/simplicité. Le Livret A reste utile pour
+            l'épargne de précaution (3–6 mois de dépenses), mais ne doit pas
+            être le seul outil d'épargne long terme.
+          </p>
+        </aside>
+
+      </div>
+      <!-- ☝️ Fin colonne gauche (tableau) -->
+
+
+      <!-- =====================================================
+           PARTIE DROITE : LE QUIZ (FORMULAIRE)
+           Nouvelles balises : <form> <fieldset> <legend>
+                               <input> <label> <select> <textarea>
+                               <button>
+      ===================================================== -->
+      <div>
+
+        <span class="section-label">Quiz interactif</span>
+        <h2>Quel est ton profil ?</h2>
+        <p>
+          Réponds aux questions pour recevoir une recommandation
+          personnalisée adaptée à ta situation.
+        </p>
+
+        <!--
+          BALISE <form> : conteneur du formulaire
+          action="#" : URL de traitement (ici fictive, JS à l'étape 6)
+          novalidate : on gère la validation nous-mêmes (en JS)
+        -->
+        <form class="quiz-form" id="quiz" action="#" novalidate>
+
+          <!-- ============================================
+               QUESTION 1 — INPUT RADIO
+               <fieldset> groupe les options d'une question
+               <legend> est le titre du groupe
+               <input type="radio"> = un seul choix possible
+          ============================================ -->
+          <fieldset>
+            <legend>
+              <span>Q1</span> Quel est ton objectif principal ?
+            </legend>
+
+            <!-- Chaque option = <div class="option"> contenant input + label -->
+            <div class="option">
+              <!--
+                BALISE <input type="radio"> :
+                - name="objectif" : regroupe les radios (un seul cochable)
+                - value="securite" : valeur envoyée si coché
+                - id="obj1" : identifiant unique pour le <label>
+              -->
+              <input type="radio" name="objectif" value="securite" id="obj1">
+              <!--
+                BALISE <label for="obj1"> :
+                - for="obj1" lie le label à l'input id="obj1"
+                - Cliquer sur le label coche l'input automatiquement !
+              -->
+              <label for="obj1">🛡️ Protéger mon capital avant tout</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="objectif" value="croissance" id="obj2">
+              <label for="obj2">📈 Faire croître mon patrimoine</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="objectif" value="revenus" id="obj3">
+              <label for="obj3">💰 Générer des revenus passifs</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="objectif" value="retraite" id="obj4">
+              <label for="obj4">🏖️ Préparer ma retraite</label>
+            </div>
+          </fieldset>
+
+
+          <!-- ============================================
+               QUESTION 2 — INPUT RANGE (curseur)
+               <input type="range"> : valeur glissante
+          ============================================ -->
+          <fieldset>
+            <legend>
+              <span>Q2</span> Combien peux-tu investir par mois ?
+            </legend>
+
+            <!-- Affichage de la valeur en temps réel (mis à jour par JS Étape 6) -->
+            <div class="range-value" id="range-display">50 €/mois</div>
+
+            <div class="range-wrap">
+              <div class="range-labels">
+                <span>10€</span>
+                <span>500€</span>
+              </div>
+              <!--
+                BALISE <input type="range"> :
+                - min / max : valeurs extrêmes
+                - value : valeur par défaut
+                - step : pas de déplacement
+                - id="montant" : pour le lier au JS
+                - oninput : appelle une fonction JS à chaque déplacement
+                  (avant-goût de l'étape 6 !)
+              -->
+              <input type="range"
+                     id="montant"
+                     name="montant"
+                     min="10"
+                     max="500"
+                     value="50"
+                     step="10"
+                     oninput="document.getElementById('range-display').textContent = this.value + ' €/mois'">
+            </div>
+          </fieldset>
+
+
+          <!-- ============================================
+               QUESTION 3 — SELECT (liste déroulante)
+          ============================================ -->
+          <fieldset>
+            <legend>
+              <span>Q3</span> Sur quel horizon veux-tu investir ?
+            </legend>
+
+            <div class="select-wrap">
+              <!--
+                BALISE <select> : menu déroulant
+                name="horizon" : nom du champ pour le formulaire
+              -->
+              <select name="horizon" id="horizon">
+                <!--
+                  BALISE <option> : chaque choix du menu
+                  value="" : valeur envoyée si sélectionnée
+                  selected : option sélectionnée par défaut
+                -->
+                <option value="" disabled selected>Choisis une durée...</option>
+                <option value="court">Moins de 3 ans (court terme)</option>
+                <option value="moyen">3 à 7 ans (moyen terme)</option>
+                <option value="long">7 à 15 ans (long terme)</option>
+                <option value="tres-long">Plus de 15 ans (très long terme)</option>
+              </select>
+            </div>
+          </fieldset>
+
+
+          <!-- ============================================
+               QUESTION 4 — CHECKBOX (choix multiple)
+               Contrairement aux radio, plusieurs cochables !
+          ============================================ -->
+          <fieldset>
+            <legend>
+              <span>Q4</span> Quels risques acceptes-tu ? (plusieurs choix)
+            </legend>
+
+            <div class="option">
+              <!--
+                BALISE <input type="checkbox"> :
+                Chaque checkbox a son propre name.
+                Plusieurs peuvent être cochées en même temps !
+              -->
+              <input type="checkbox" name="risque_perte" value="oui" id="r1">
+              <label for="r1">📉 Accepter une perte temporaire de -20%</label>
+            </div>
+
+            <div class="option">
+              <input type="checkbox" name="risque_volatilite" value="oui" id="r2">
+              <label for="r2">📊 Voir mon portefeuille fluctuer chaque jour</label>
+            </div>
+
+            <div class="option">
+              <input type="checkbox" name="risque_blocage" value="oui" id="r3">
+              <label for="r3">🔒 Bloquer mon argent plusieurs années</label>
+            </div>
+
+            <div class="option">
+              <input type="checkbox" name="risque_zero" value="oui" id="r4">
+              <label for="r4">❌ Aucun risque — je préfère la sécurité totale</label>
+            </div>
+          </fieldset>
+
+
+          <!-- ============================================
+               QUESTION 5 — INPUT TEXT + SELECT combinés
+          ============================================ -->
+          <fieldset>
+            <legend>
+              <span>Q5</span> Ta situation personnelle
+            </legend>
+
+            <!-- Groupe : label au-dessus de l'input -->
+            <div class="field-group">
+              <!--
+                BALISE <label> : texte descriptif au-dessus du champ
+                for="age" lie ce label à l'input id="age"
+              -->
+              <label for="age">Ton âge</label>
+              <!--
+                BALISE <input type="number"> :
+                Accepte uniquement des chiffres.
+                min/max : valeurs autorisées
+                placeholder : texte indicatif dans le champ vide
+              -->
+              <input type="number"
+                     id="age"
+                     name="age"
+                     min="15"
+                     max="99"
+                     placeholder="Ex : 17">
+            </div>
+
+            <div class="field-group">
+              <label for="situation">Ta situation</label>
+              <div class="select-wrap">
+                <select id="situation" name="situation">
+                  <option value="" disabled selected>Sélectionne...</option>
+                  <option value="lyceen">Lycéen(ne)</option>
+                  <option value="etudiant">Étudiant(e)</option>
+                  <option value="salarie">Salarié(e)</option>
+                  <option value="independant">Indépendant(e)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- BALISE <textarea> : champ de texte libre multi-lignes -->
+            <div class="field-group">
+              <label for="question">Une question spécifique ? (optionnel)</label>
+              <textarea
+                id="question"
+                name="question"
+                rows="3"
+                maxlength="300"
+                placeholder="Ex : Comment investir avec seulement 20€/mois ?..."
+                oninput="document.getElementById('char-count').textContent = this.value.length + '/300'"
+              ></textarea>
+              <!-- Compteur de caractères mis à jour par JS -->
+              <span class="field-hint" id="char-count">0/300</span>
+            </div>
+
+          </fieldset>
+
+
+          <!-- ============================================
+               BOUTON DE SOUMISSION
+               <button type="submit"> envoie le formulaire
+          ============================================ -->
+          <div class="submit-wrap">
+            <!--
+              BALISE <button type="submit"> :
+              Déclenche la soumission du formulaire.
+              On ajoutera la gestion en JS à l'étape 6.
+            -->
+            <button type="submit">
+              Découvrir mon profil →
+            </button>
+          </div>
+
+          <!-- Zone résultat (affichée par JS à l'étape 6) -->
+          <div class="resultat" id="resultat">
+            <span style="font-size:2.5rem">🎉</span>
+            <h3 style="margin:12px 0 8px; color:var(--blanc)">Ton profil : <span id="profil-nom">Investisseur équilibré</span></h3>
+            <p id="profil-desc" style="max-width:100%; margin:0"></p>
+          </div>
+
+        </form>
+        <!-- ☝️ Fin <form> -->
+
+      </div>
+      <!-- ☝️ Fin colonne droite (formulaire) -->
+
+    </div>
+    <!-- ☝️ Fin .page-layout -->
+
+
+    <!-- Navigation entre pages -->
+    <div class="nav-pages">
+      <a href="strategies.html" class="btn btn-contour">← Stratégies</a>
+      <span style="color:var(--gris); font-size:0.85rem;">Page 5 sur 7</span>
+      <a href="#" class="btn btn-or">Le simulateur →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>InvestirFuté</strong> — Créé par <strong>Titouan Fauré Thomazo</strong> —
+      Site éducatif, pas de conseils financiers personnalisés.
+      <a href="#">Mentions légales</a>
+    </p>
+    <p class="footer-sub">Créé avec ❤️ en HTML/CSS pur · Étape 5 sur 7</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<!-- ☝️ BALISE 1 : Déclare que c'est une page HTML5 (toujours en premier !) -->
+
+<html lang="fr">
+<!-- ☝️ BALISE 2 : Racine de toute la page. lang="fr" indique que c'est en français -->
+
+  <!-- ============================================================
+       LA TÊTE DE LA PAGE : infos invisibles pour le navigateur
+  ============================================================ -->
+  <head>
+
+    <!-- BALISE <meta> : donne des infos au navigateur -->
+    <meta charset="UTF-8">
+    <!-- ☝️ Permet d'afficher les accents (é, è, à...) -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ☝️ Rend la page lisible sur téléphone aussi -->
+
+    <meta name="description" content="Apprends à investir ton argent intelligemment, même en partant de zéro.">
+    <!-- ☝️ Description qui apparaît dans Google -->
+
+    <!-- BALISE <title> : le nom dans l'onglet du navigateur -->
+    <title>InvestirFuté — Apprendre l'investissement</title>
+
+    <!--
+      ÉTAPE 3 — On remplace le bloc <style> par un lien externe.
+      BALISE <link> : connecte une feuille de style CSS à la page HTML.
+      rel="stylesheet" = c'est bien une feuille de style
+      href="style.css" = chemin vers le fichier CSS
+      ✅ Avantage : UN seul fichier CSS pour TOUTES les pages !
+    -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- (ancien <style> supprimé — tout est maintenant dans style.css) -->
+    <style>
+      /* On garde ici uniquement les styles SPÉCIFIQUES à index.html
+         que l'on n'a pas encore mis dans style.css */
+
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+      /* ---- Variables de couleur (palette finance premium) ---- */
+      :root {
+        --or:       #C9A84C;
+        --or-clair: #F0D080;
+        --marine:   #0A1628;
+        --bleu:     #1B3A6B;
+        --bleu-mid: #2E5FA3;
+        --blanc:    #F8F5EE;
+        --gris:     #8A9BB5;
+        --vert:     #2ECC71;
+      }
+
+      /* ---- Reset & base ---- */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: 'Source Sans 3', sans-serif;
+        background-color: var(--marine);
+        color: var(--blanc);
+        line-height: 1.7;
+      }
+
+      /* ---- En-tête (HEADER) ---- */
+      header {
+        background: linear-gradient(135deg, var(--marine) 0%, var(--bleu) 100%);
+        border-bottom: 2px solid var(--or);
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+      }
+
+      .logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--or);
+        text-decoration: none;
+        letter-spacing: 1px;
+      }
+
+      .logo span { color: var(--blanc); }
+
+      /* ---- Navigation ---- */
+      nav ul {
+        list-style: none; /* ☝️ Enlève les puces de la liste */
+        display: flex;
+        gap: 30px;
+      }
+
+      nav ul li a {
+        color: var(--gris);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+
+      nav ul li a:hover { color: var(--or); }
+
+      /* ---- Section HERO (grande bannière) ---- */
+      .hero {
+        min-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 5%;
+        background:
+          radial-gradient(ellipse at 70% 30%, rgba(44,95,163,0.25) 0%, transparent 60%),
+          radial-gradient(ellipse at 20% 80%, rgba(201,168,76,0.10) 0%, transparent 55%),
+          var(--marine);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Grille déco en fond */
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+      }
+
+      .badge {
+        display: inline-block;
+        background: rgba(201,168,76,0.15);
+        border: 1px solid var(--or);
+        color: var(--or);
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 6px 20px;
+        border-radius: 50px;
+        margin-bottom: 28px;
+      }
+
+      /* ---- Titres h1 à h3 ---- */
+
+      /* BALISE <h1> : titre principal, un seul par page ! */
+      h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.5rem, 7vw, 5.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        color: var(--blanc);
+        margin-bottom: 24px;
+        max-width: 800px;
+      }
+
+      h1 em {
+        font-style: normal;
+        color: var(--or);
+      }
+
+      /* BALISE <h2> : sous-titre de section */
+      h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.6rem, 4vw, 2.8rem);
+        color: var(--blanc);
+        margin-bottom: 16px;
+      }
+
+      /* BALISE <h3> : titre de carte / bloc */
+      h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        color: var(--or);
+        margin-bottom: 10px;
+      }
+
+      /* BALISE <p> : paragraphe de texte */
+      p {
+        color: var(--gris);
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0 auto 20px;
+      }
+
+      /* ---- Boutons (BALISE <a> utilisée comme bouton) ---- */
+      .btn {
+        display: inline-block;
+        padding: 14px 36px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin: 8px;
+      }
+
+      .btn:hover { transform: translateY(-2px); }
+
+      .btn-or {
+        background: linear-gradient(135deg, var(--or), var(--or-clair));
+        color: var(--marine);
+      }
+
+      .btn-contour {
+        border: 1.5px solid var(--or);
+        color: var(--or);
+        background: transparent;
+      }
+
+      /* Chiffres animés sous le hero */
+      .stats {
+        display: flex;
+        gap: 50px;
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(201,168,76,0.2);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .stat-item { text-align: center; }
+
+      .stat-nb {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        color: var(--or);
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--gris);
+      }
+
+      /* ---- Section "Pourquoi investir ?" ---- */
+      .section {
+        padding: 90px 5%;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        color: var(--or);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .intro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .intro-text p { margin: 0 0 16px; max-width: 100%; }
+
+      /* ---- Cartes de raison ---- */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-top: 50px;
+      }
+
+      /* BALISE <div> : conteneur générique, ici utilisé pour les cartes */
+      .card {
+        background: rgba(27, 58, 107, 0.3);
+        border: 1px solid rgba(201,168,76,0.2);
+        border-top: 3px solid var(--or);
+        padding: 30px 24px;
+        border-radius: 6px;
+        transition: transform 0.2s, border-color 0.2s;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--or);
+      }
+
+      .card-icon {
+        font-size: 2rem;
+        margin-bottom: 14px;
+        display: block;
+      }
+
+      .card p { font-size: 0.95rem; max-width: 100%; margin: 0; }
+
+      /* ---- Footer ---- */
+      footer {
+        background: rgba(10,22,40,0.9);
+        border-top: 1px solid rgba(201,168,76,0.15);
+        text-align: center;
+        padding: 40px 5%;
+        color: var(--gris);
+        font-size: 0.88rem;
+      }
+
+      footer a { color: var(--or); text-decoration: none; }
+
+      /* ---- Responsive mobile ---- */
+      @media (max-width: 768px) {
+        nav ul { display: none; } /* On masque le menu sur mobile pour l'instant */
+        .intro-grid { grid-template-columns: 1fr; gap: 30px; }
+        .stats { gap: 30px; }
+      }
+
+    </style>
+
+  </head>
+
+  <!-- ============================================================
+       LE CORPS DE LA PAGE : tout ce que l'utilisateur voit
+  ============================================================ -->
+  <body>
+
+    <!-- ============================
+         BALISE <header> : en-tête
+    ============================= -->
+    <header>
+
+      <!-- BALISE <a> : un lien cliquable -->
+      <a href="index.html" class="logo">Investir<span>Futé</span></a>
+
+      <!-- BALISE <nav> : zone de navigation -->
+      <nav>
+        <!-- BALISE <ul> : liste non ordonnée (à puces) -->
+        <ul>
+          <!-- BALISE <li> : un élément de la liste -->
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="les-bases.html">Les bases</a></li>
+          <li><a href="les-produits.html">Les produits</a></li>
+          <li><a href="strategies.html">Stratégies</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="simulateur.html">Simulateur</a></li>
+        </ul>
+      </nav>
+
+    </header>
+
+    <!-- ============================
+         BALISE <main> : contenu principal
+    ============================= -->
+    <main>
+
+      <!-- ---- Section HERO ---- -->
+      <!-- BALISE <section> : un bloc thématique de la page -->
+      <section class="hero">
+
+        <span class="badge">🎓 Guide pour débutants · Gratuit</span>
+
+        <!-- BALISE <h1> : titre principal de la page (un seul !) -->
+        <h1>Ton argent peut<br>travailler <em>pour toi.</em></h1>
+
+        <!-- BALISE <p> : paragraphe -->
+        <p>
+          Découvre les bases de l'investissement, les bons produits financiers
+          et les stratégies simples pour construire ton avenir — même avec
+          peu d'argent au départ.
+        </p>
+
+        <!-- Deux liens <a> stylisés en boutons -->
+        <div>
+          <a href="#pourquoi" class="btn btn-or">Commencer maintenant</a>
+          <a href="#" class="btn btn-contour">Voir le simulateur</a>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-nb">7%</span>
+            <span class="stat-label">Rendement moyen ETF / an</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-nb">10€</span>
+            <span class="stat-label">Pour commencer à investir</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-nb">5 min</span>
+            <span class="stat-label">Pour comprendre les bases</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ---- Section "Pourquoi investir ?" ---- -->
+      <section class="section" id="pourquoi">
+
+        <div class="intro-grid">
+
+          <div class="intro-text">
+            <span class="section-label">Pourquoi investir ?</span>
+
+            <!-- BALISE <h2> : titre de section -->
+            <h2>L'inflation mange ton épargne chaque année.</h2>
+
+            <!-- Plusieurs balises <p> à la suite -->
+            <p>
+              Si tu laisses ton argent dormir sur un Livret A à 3 %,
+              mais que l'inflation est à 4 %, tu <strong>perds du pouvoir d'achat</strong>
+              sans t'en rendre compte.
+            </p>
+            <p>
+              Investir, c'est mettre ton argent dans des actifs qui
+              <strong>prennent de la valeur</strong> avec le temps : actions, ETF,
+              immobilier, obligations...
+            </p>
+            <p>
+              Pas besoin d'être riche pour commencer.
+              La clé, c'est de démarrer <strong>tôt</strong> et d'être <strong>régulier</strong>.
+            </p>
+          </div>
+
+          <!-- Citation mise en avant -->
+          <div style="
+            background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(27,58,107,0.3));
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+          ">
+            <span style="font-size: 3rem;">💡</span>
+            <!-- BALISE <h3> : titre de bloc secondaire -->
+            <h3 style="font-size: 1.5rem; margin: 16px 0 12px;">La règle des 72</h3>
+            <p style="max-width: 100%;">
+              Divise <strong style="color:var(--or)">72</strong> par ton taux de rendement annuel
+              et tu obtiens le nombre d'années pour <strong style="color:var(--or)">doubler</strong> ton capital.
+            </p>
+            <p style="font-size: 0.9rem; margin-top: 12px;">
+              Exemple : à 7% par an → 72 ÷ 7 = <strong style="color:var(--vert)">~10 ans</strong> pour doubler.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ---- Cartes : les 4 bonnes raisons ---- -->
+        <div class="cards">
+
+          <div class="card">
+            <span class="card-icon">📈</span>
+            <h3>Battre l'inflation</h3>
+            <p>Protège ton pouvoir d'achat en faisant fructifier ton argent
+               plus vite que la hausse des prix.</p>
+          </div>
+
+          <div class="card">
+            <span class="card-icon">⏳</span>
+            <h3>Les intérêts composés</h3>
+            <p>Tes gains génèrent eux-mêmes des gains. Plus tu commences tôt,
+               plus l'effet boule de neige est puissant.</p>
+          </div>
+
+          <div class="card">
+            <span class="card-icon">🎯</span>
+            <h3>Atteindre tes objectifs</h3>
+            <p>Voyage, voiture, appartement, retraite anticipée...
+               L'investissement t'aide à financer tes projets de vie.</p>
+          </div>
+
+          <div class="card">
+            <span class="card-icon">🔓</span>
+            <h3>Liberté financière</h3>
+            <p>À terme, tes investissements peuvent générer des revenus passifs
+               qui couvrent tes dépenses.</p>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ============================
+         BALISE <footer> : pied de page
+    ============================= -->
+    <footer>
+      <p>
+        &copy; 2026 <strong>InvestirFuté</strong> — Créé par <strong>Titouan Fauré Thomazo</strong> —
+      Site éducatif, pas de conseils financiers personnalisés.
+        <a href="#">Mentions légales</a>
+      </p>
+      <p style="margin-top: 8px; font-size: 0.8rem; color: #4a6080;">
+        Créé avec ❤️ en HTML pur · Étape 1 sur 7
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+<!-- ☝️ Fermeture de <body> -->
+
+</html>
+<!-- ☝️ Fermeture de <html> : toujours fermer ce qu'on ouvre ! -->

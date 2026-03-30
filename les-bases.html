@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvestirFuté — Les bases</title>
+  <!--
+    ÉTAPE 3 — BALISE <link> : charge la feuille de style externe.
+    rel="stylesheet" indique que c'est un fichier CSS.
+    href="style.css" pointe vers notre fichier commun.
+  -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ================================================
+       Styles SPÉCIFIQUES à les-bases.html
+       Tout le reste vient de style.css (via le <link>)
+    ================================================ */
+
+    /* Bloc comparatif épargne vs investissement */
+    .bloc-compare {
+      background: rgba(27,58,107,0.25);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 8px;
+      padding: 30px;
+    }
+    .bloc-compare.mauvais { border-top: 3px solid var(--rouge); }
+    .bloc-compare.bon     { border-top: 3px solid var(--vert); }
+
+    /* Cartes risques */
+    .risques-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px; margin-top: 30px; margin-bottom: 60px;
+    }
+    .risque-card {
+      background: rgba(27,58,107,0.2);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px; padding: 24px 20px; transition: transform 0.2s;
+    }
+    .risque-card:hover { transform: translateY(-3px); }
+
+    /* Indicateurs de niveau (pastilles colorées) */
+    .niveau { display: flex; gap: 4px; margin-bottom: 12px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+    .dot.on-vert  { background: var(--vert); }
+    .dot.on-or    { background: var(--or); }
+    .dot.on-rouge { background: var(--rouge); }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================
+       HEADER (en-tête)
+  ===================== -->
+  <header>
+    <a href="index.html" class="logo">Investir<span>Futé</span></a>
+
+    <!-- BALISE <nav> : menu de navigation principal -->
+    <nav>
+      <!-- BALISE <ul> : liste non ordonnée = liste de liens -->
+      <ul>
+        <!-- BALISE <li> : un élément de liste = un lien du menu -->
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="les-bases.html" class="actif">Les bases</a></li>
+        <!-- ☝️ class="actif" souligne la page courante en or -->
+        <li><a href="les-produits.html">Les produits</a></li>
+        <li><a href="strategies.html">Stratégies</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="simulateur.html">Simulateur</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =====================
+       BANNIÈRE DE PAGE
+  ===================== -->
+  <!-- BALISE <section> : un grand bloc thématique -->
+  <section class="page-banner">
+
+    <!-- Fil d'ariane : montre où on est dans le site -->
+    <!-- BALISE <p> avec des <a> imbriqués -->
+    <p class="breadcrumb">
+      <a href="index.html">Accueil</a> › Les bases
+    </p>
+
+    <h1>Épargne vs <em>Investissement</em></h1>
+    <p>Comprends la différence fondamentale entre mettre de l'argent de côté
+       et le faire travailler pour toi — et pourquoi ça change tout.</p>
+
+  </section>
+
+  <!-- =====================
+       CONTENU PRINCIPAL
+  ===================== -->
+  <!-- BALISE <main> : le contenu central de la page -->
+  <main>
+
+    <!-- ---- Bloc 1 : Épargne vs Investissement ---- -->
+    <!-- BALISE <section> pour regrouper un sujet -->
+    <section>
+
+      <span class="section-label">Chapitre 1</span>
+      <h2>Épargne vs Investissement</h2>
+
+      <!-- BALISE <div> : on regroupe les deux colonnes dans un conteneur -->
+      <div class="grille-2">
+
+        <!-- Colonne gauche : l'épargne -->
+        <div class="bloc-compare mauvais">
+          <span class="tag rouge">😴 L'épargne seule</span>
+          <h3>Livret A, compte courant...</h3>
+          <p>Tu mets ton argent de côté, il est en sécurité, mais il ne grossit pas vraiment.</p>
+
+          <!-- BALISE <ul> : liste à puces -->
+          <ul class="liste-check">
+            <li>Argent disponible à tout moment</li>
+            <li>Zéro risque de perte</li>
+            <li class="non">Rendement faible (2–3%)</li>
+            <li class="non">L'inflation grignote tes gains</li>
+            <li class="non">Capital qui ne double jamais</li>
+          </ul>
+          <!-- ☝️ <li class="non"> = puce rouge avec ✗ au lieu de ✓ -->
+        </div>
+
+        <!-- Colonne droite : l'investissement -->
+        <div class="bloc-compare bon">
+          <span class="tag vert">🚀 L'investissement</span>
+          <h3>ETF, actions, immobilier...</h3>
+          <p>Tu acceptes un risque calculé pour obtenir un rendement bien supérieur sur le long terme.</p>
+
+          <ul class="liste-check">
+            <!-- BALISE <li> : chaque élément de la liste -->
+            <li>Rendement historique ~7–10%/an</li>
+            <li>Bat l'inflation sur le long terme</li>
+            <li>Capital qui peut doubler en 10 ans</li>
+            <li class="non">Valeur peut baisser à court terme</li>
+            <li class="non">Demande un horizon de 5 ans mini</li>
+          </ul>
+        </div>
+
+      </div>
+      <!-- ☝️ Fin du div.grille-2 -->
+
+    </section>
+    <!-- ☝️ Fin de la section "Épargne vs Investissement" -->
+
+    <!-- ---- Encart "À retenir" ---- -->
+    <!-- BALISE <aside> : information complémentaire / encadré -->
+    <aside>
+      <h3>💡 À retenir</h3>
+      <p>
+        L'idéal n'est pas de choisir entre épargne ET investissement,
+        mais de faire les <strong>deux ensemble</strong> :
+        garde 3 à 6 mois de dépenses en épargne de précaution (Livret A),
+        et investis le reste sur le long terme.
+      </p>
+    </aside>
+
+    <!-- ---- Bloc 2 : Les risques ---- -->
+    <section>
+
+      <span class="section-label">Chapitre 2</span>
+      <h2>Comprendre les risques</h2>
+
+      <p>
+        Investir, c'est accepter une part de risque. Mais le risque se gère !
+        Il existe plusieurs types de risques selon les produits financiers.
+      </p>
+
+      <!-- BALISE <div> : conteneur pour la grille de cartes -->
+      <div class="risques-grid">
+
+        <!-- Carte 1 -->
+        <!-- BALISE <div class="risque-card"> : une carte = un type de risque -->
+        <div class="risque-card">
+          <!-- Indicateur visuel du niveau de risque -->
+          <div class="niveau">
+            <div class="dot on-vert"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <h3>Risque faible</h3>
+          <p style="color:var(--gris); font-size:0.95rem; margin:0">
+            Obligations d'État, Livret A, fonds monétaires.
+            Peu de gains, mais capital presque garanti.
+          </p>
+        </div>
+
+        <!-- Carte 2 -->
+        <div class="risque-card">
+          <div class="niveau">
+            <div class="dot on-or"></div>
+            <div class="dot on-or"></div>
+            <div class="dot"></div>
+          </div>
+          <h3>Risque modéré</h3>
+          <p style="color:var(--gris); font-size:0.95rem; margin:0">
+            ETF indiciels, immobilier, fonds diversifiés.
+            Le meilleur équilibre risque/rendement pour débuter.
+          </p>
+        </div>
+
+        <!-- Carte 3 -->
+        <div class="risque-card">
+          <div class="niveau">
+            <div class="dot on-rouge"></div>
+            <div class="dot on-rouge"></div>
+            <div class="dot on-rouge"></div>
+          </div>
+          <h3>Risque élevé</h3>
+          <p style="color:var(--gris); font-size:0.95rem; margin:0">
+            Actions individuelles, crypto, startups.
+            Potentiel de gain élevé, mais perte totale possible.
+          </p>
+        </div>
+
+      </div>
+      <!-- ☝️ Fin du div.risques-grid -->
+
+    </section>
+    <!-- ☝️ Fin de la section "Risques" -->
+
+    <!-- ---- Règle d'or ---- -->
+    <aside>
+      <h3>🛡️ La règle d'or du débutant</h3>
+      <p>
+        N'investis jamais de l'argent dont tu pourrais avoir besoin
+        dans les <strong>5 prochaines années</strong>.
+        Les marchés fluctuent à court terme — la patience est ton meilleur atout.
+      </p>
+    </aside>
+
+    <!-- ---- Navigation entre pages ---- -->
+    <!-- BALISE <div class="nav-pages"> : barre de navigation bas de page -->
+    <div class="nav-pages">
+      <!-- BALISE <a href="..."> : lien vers la page précédente -->
+      <a href="index.html" class="btn btn-contour">← Accueil</a>
+
+      <span style="color:var(--gris); font-size:0.85rem;">Page 2 sur 7</span>
+
+      <!-- BALISE <a href="..."> : lien vers la page suivante -->
+      <a href="les-produits.html" class="btn btn-or">Les produits financiers →</a>
+    </div>
+
+  </main>
+  <!-- ☝️ Fin de <main> -->
+
+  <!-- =====================
+       FOOTER (pied de page)
+  ===================== -->
+  <!-- BALISE <footer> : informations de bas de page -->
+  <footer>
+    <p>
+      &copy; 2026 <strong>InvestirFuté</strong> — Créé par <strong>Titouan Fauré Thomazo</strong> —
+      Site éducatif, pas de conseils financiers personnalisés.
+      <a href="#">Mentions légales</a>
+    </p>
+    <p style="margin-top:8px; font-size:0.8rem; color:#4a6080;">
+      Créé avec ❤️ en HTML pur · Étape 2 sur 7
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
